@@ -234,13 +234,13 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 7px 5px 7px 8px;
-}
-#view-projects .scroll-content { padding: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
 }
 .scroll-content::-webkit-scrollbar { display: none; }
+#view-projects .scroll-content { padding: 0; }
+#view-projects .scroll-track { display: none; }
 
 .text-body p {
   font-size: 9.5px;
