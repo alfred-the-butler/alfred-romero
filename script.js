@@ -133,7 +133,9 @@ function onWheelStart(e) {
   if (distFromCenter(e, clickwheel) <= CENTER_RADIUS) return;
   dragging  = true;
   lastAngle = getAngle(e, clickwheel);
-  e.preventDefault();
+  /* Do NOT preventDefault here — it blocks the synthetic click on touch
+     devices, which would break MENU / fwd / bck / select tap buttons.
+     We only preventDefault once an actual drag movement is detected. */
 }
 
 function onWheelMove(e) {
@@ -143,6 +145,8 @@ function onWheelMove(e) {
   if (delta >  180) delta -= 360;
   if (delta < -180) delta += 360;
   lastAngle = angle;
+  /* Only preventDefault once movement is happening — keeps tap-to-click intact. */
+  if (e.cancelable) e.preventDefault();
 
   if (currentView === 'menu') {
     wheelAccum += delta;
@@ -155,7 +159,6 @@ function onWheelMove(e) {
   } else {
     scrollBy(delta * 1.8);
   }
-  e.preventDefault();
 }
 
 function onWheelEnd() { dragging = false; lastAngle = null; wheelAccum = 0; }

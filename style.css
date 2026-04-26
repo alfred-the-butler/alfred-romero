@@ -229,9 +229,9 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 7px 5px 7px 8px;
-  scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
 }
 .scroll-content::-webkit-scrollbar { display: none; }
 
