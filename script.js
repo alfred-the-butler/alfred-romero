@@ -72,15 +72,22 @@ function updateMenuSelection() {
 
 // Screen is not touch — navigation happens via the clickwheel only.
 
+// ─── Haptics ──────────────────────────────────────
+function buzz(ms = 8) {
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
+
 // ─── Wheel buttons ────────────────────────────────
 
 document.getElementById('btn-menu').addEventListener('click', e => {
   e.stopPropagation();
+  buzz();
   navigate('menu');
 });
 
 document.getElementById('btn-select').addEventListener('click', e => {
   e.stopPropagation();
+  buzz(12);
   if (currentView === 'menu') {
     const sel = menuItems[selectedIndex];
     if (sel) navigate(sel.dataset.view);
@@ -89,6 +96,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
 
 document.getElementById('btn-fwd').addEventListener('click', e => {
   e.stopPropagation();
+  buzz();
   if (currentView === 'menu') {
     selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
     updateMenuSelection();
@@ -99,6 +107,7 @@ document.getElementById('btn-fwd').addEventListener('click', e => {
 
 document.getElementById('btn-bck').addEventListener('click', e => {
   e.stopPropagation();
+  buzz();
   if (currentView === 'menu') {
     selectedIndex = Math.max(selectedIndex - 1, 0);
     updateMenuSelection();
@@ -154,6 +163,7 @@ function onWheelMove(e) {
       if (wheelAccum > 0) selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
       else                selectedIndex = Math.max(selectedIndex - 1, 0);
       updateMenuSelection();
+      buzz(5);
       wheelAccum = 0;
     }
   } else {

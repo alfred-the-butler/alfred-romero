@@ -339,7 +339,7 @@ body {
   line-height: 1;
   transition: color 0.1s;
 }
-.wheel-label:active { color: #333; }
+.wheel-label, .wheel-center, .wheel { -webkit-tap-highlight-color: transparent; }
 .w-top    { top: 12px;    left: 50%; transform: translateX(-50%); font-size: 9px; }
 .w-bottom { bottom: 13px; left: 50%; transform: translateX(-50%); font-size: 9px; }
 .w-left   { left: 13px;   top: 50%;  transform: translateY(-50%); font-size: 8.5px; }
