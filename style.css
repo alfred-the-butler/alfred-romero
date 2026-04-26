@@ -601,6 +601,13 @@ body {
   left: -28px;
   right: -28px;
 }
+/* Clip each label's hit area so it grows outward only — never into the center
+   button. Without this, FWD/BCK overlap the center and a slightly-off-center
+   tap registers as "next item" instead of "select". */
+.w-top::before    { bottom: -4px; }
+.w-bottom::before { top: -4px; }
+.w-left::before   { right: -4px; }
+.w-right::before  { left: -4px; }
 .w-top    { top: 12px;    left: 50%; transform: translateX(-50%); font-size: 11px; }
 .w-bottom { bottom: 11px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 1px; }
 .w-left   { left: 12px;   top: 50%;  transform: translateY(-50%); font-size: 11px; }
