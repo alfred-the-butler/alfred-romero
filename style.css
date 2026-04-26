@@ -3,34 +3,106 @@
 
 /* ─── Theme ─────────────────────────────────────── */
 :root {
-  --ipod-base: #6442A8;
-  --center-1: #7454BC;
-  --center-2: #6646AE;
-  --center-3: #5E3EA6;
-  --center-4: #5A3AA2;
+  --ipod-base: #7B53CC;
+  --center-1: #9E7CDD;
+  --center-2: #8662D2;
+  --center-3: #7350C2;
+  --center-4: #6644B4;
   --shadow-1: rgba(40, 15, 100, 0.45);
   --shadow-2: rgba(35, 10, 90, 0.38);
   --shadow-3: rgba(25, 5, 75, 0.26);
+  --wheel-bg: radial-gradient(ellipse at 40% 35%, #f8f8f8 0%, #eeeeee 30%, #e2e2e2 65%, #d4d4d4 100%);
+  --wheel-label-color: #7a7a7a;
+  --wheel-shadow-light: rgba(255, 255, 255, 0.90);
+  --wheel-shadow-dark: rgba(0, 0, 0, 0.12);
 }
 body[data-theme="blue"] {
-  --ipod-base: #2E5BA8;
-  --center-1: #4A7BC8;
-  --center-2: #3A68B8;
-  --center-3: #2F5AA8;
-  --center-4: #2A529E;
-  --shadow-1: rgba(15, 40, 100, 0.45);
-  --shadow-2: rgba(10, 35, 90, 0.38);
-  --shadow-3: rgba(5, 25, 75, 0.26);
+  --ipod-base: #2DB4DF;
+  --center-1: #6FCEE8;
+  --center-2: #45BEE0;
+  --center-3: #2BACD4;
+  --center-4: #1F9DC4;
+  --shadow-1: rgba(10, 80, 130, 0.45);
+  --shadow-2: rgba(5, 70, 120, 0.38);
+  --shadow-3: rgba(0, 55, 100, 0.26);
 }
 body[data-theme="orange"] {
-  --ipod-base: #D86A1A;
-  --center-1: #F08840;
-  --center-2: #DC7220;
-  --center-3: #C66218;
-  --center-4: #B85A14;
+  --ipod-base: #E97A1F;
+  --center-1: #F89A4C;
+  --center-2: #EE842A;
+  --center-3: #D86F1B;
+  --center-4: #C46318;
   --shadow-1: rgba(120, 50, 10, 0.45);
   --shadow-2: rgba(100, 40, 5, 0.38);
   --shadow-3: rgba(80, 30, 0, 0.26);
+}
+body[data-theme="red"] {
+  --ipod-base: #D62631;
+  --center-1: #EC5560;
+  --center-2: #DD3640;
+  --center-3: #C9202B;
+  --center-4: #B71A24;
+  --shadow-1: rgba(110, 15, 25, 0.45);
+  --shadow-2: rgba(95, 10, 20, 0.38);
+  --shadow-3: rgba(75, 5, 15, 0.26);
+}
+body[data-theme="yellow"] {
+  --ipod-base: #EBC51F;
+  --center-1: #F5DA52;
+  --center-2: #EECA2C;
+  --center-3: #DAB418;
+  --center-4: #C5A312;
+  --shadow-1: rgba(120, 95, 10, 0.45);
+  --shadow-2: rgba(100, 80, 5, 0.38);
+  --shadow-3: rgba(80, 65, 0, 0.26);
+}
+body[data-theme="green"] {
+  --ipod-base: #88BD3C;
+  --center-1: #ABD668;
+  --center-2: #93C548;
+  --center-3: #7DAF34;
+  --center-4: #6E9B2B;
+  --shadow-1: rgba(50, 90, 15, 0.45);
+  --shadow-2: rgba(40, 75, 10, 0.38);
+  --shadow-3: rgba(30, 60, 5, 0.26);
+}
+body[data-theme="pink"] {
+  --ipod-base: #E13B8A;
+  --center-1: #EE6BA7;
+  --center-2: #E54995;
+  --center-3: #CE3079;
+  --center-4: #B72868;
+  --shadow-1: rgba(120, 20, 70, 0.45);
+  --shadow-2: rgba(100, 15, 60, 0.38);
+  --shadow-3: rgba(80, 10, 50, 0.26);
+}
+body[data-theme="silver"] {
+  --ipod-base: #C2C4C9;
+  --center-1: #DEDFE2;
+  --center-2: #C9CACE;
+  --center-3: #B4B5B9;
+  --center-4: #A0A2A6;
+  --shadow-1: rgba(60, 60, 70, 0.40);
+  --shadow-2: rgba(40, 40, 50, 0.32);
+  --shadow-3: rgba(20, 20, 30, 0.22);
+  --wheel-bg: radial-gradient(ellipse at 40% 35%, #4c4c4e 0%, #3a3a3c 30%, #2c2c2e 65%, #1f1f21 100%);
+  --wheel-label-color: rgba(255, 255, 255, 0.88);
+  --wheel-shadow-light: rgba(255, 255, 255, 0.10);
+  --wheel-shadow-dark: rgba(0, 0, 0, 0.40);
+}
+body[data-theme="black"] {
+  --ipod-base: #2D2D2F;
+  --center-1: #4A4A4C;
+  --center-2: #3A3A3C;
+  --center-3: #2C2C2E;
+  --center-4: #1F1F21;
+  --shadow-1: rgba(0, 0, 0, 0.55);
+  --shadow-2: rgba(0, 0, 0, 0.42);
+  --shadow-3: rgba(0, 0, 0, 0.30);
+  --wheel-bg: radial-gradient(ellipse at 40% 35%, #4c4c4e 0%, #3a3a3c 30%, #2c2c2e 65%, #1f1f21 100%);
+  --wheel-label-color: rgba(255, 255, 255, 0.88);
+  --wheel-shadow-light: rgba(255, 255, 255, 0.10);
+  --wheel-shadow-dark: rgba(0, 0, 0, 0.40);
 }
 
 /* ─── Page ──────────────────────────────────────── */
@@ -204,16 +276,17 @@ body {
       rgba(0,0,0,0.018) 1px,
       rgba(0,0,0,0.018) 2px
     ),
-    /* Polished bands — alternating bright / dark vertical zones */
+    /* Soft cylindrical curvature — edges slightly darker, center bright,
+       very subtle to keep the base color reading true */
     linear-gradient(
       90deg,
-      rgba(255,255,255,0.22)  0%,
-      rgba(0,0,0,0.18)       17%,
-      rgba(255,255,255,0.28) 34%,
-      rgba(0,0,0,0.14)       52%,
-      rgba(255,255,255,0.18) 70%,
-      rgba(0,0,0,0.22)       88%,
-      rgba(255,255,255,0.10) 100%
+      rgba(0,0,0,0.14)        0%,
+      rgba(0,0,0,0.02)       12%,
+      rgba(255,255,255,0.06) 35%,
+      rgba(255,255,255,0.14) 50%,
+      rgba(255,255,255,0.04) 70%,
+      rgba(0,0,0,0.04)       88%,
+      rgba(0,0,0,0.14)      100%
     ),
     /* Base anodized color */
     var(--ipod-base);
@@ -499,22 +572,14 @@ body {
   user-select: none;
   cursor: default;
 
-  /* White/silver ring surface — the full circle */
-  background:
-    radial-gradient(
-      ellipse at 40% 35%,
-      #f8f8f8  0%,
-      #eeeeee 30%,
-      #e2e2e2 65%,
-      #d4d4d4 100%
-    );
+  /* Wheel surface — themeable; defaults to white/silver, dark for silver/black bodies */
+  background: var(--wheel-bg);
 
   box-shadow:
-    /* Subtle surface curve only — wheel is flush with body */
-    inset 0  2px 5px rgba(255, 255, 255, 0.90),
-    inset 3px 0 4px  rgba(255, 255, 255, 0.55),
-    inset 0 -2px 5px rgba(0, 0, 0, 0.12),
-    inset -3px 0 4px rgba(0, 0, 0, 0.06);
+    inset 0  2px 5px var(--wheel-shadow-light),
+    inset 3px 0 4px  var(--wheel-shadow-light),
+    inset 0 -2px 5px var(--wheel-shadow-dark),
+    inset -3px 0 4px var(--wheel-shadow-dark);
 }
 
 /* Ring button labels — sit on the white ring area */
@@ -522,7 +587,7 @@ body {
   position: absolute;
   font-size: 7px;
   font-weight: 700;
-  color: #7a7a7a;
+  color: var(--wheel-label-color);
   letter-spacing: 0.4px;
   text-transform: uppercase;
   cursor: pointer;
