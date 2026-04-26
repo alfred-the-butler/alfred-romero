@@ -15,11 +15,34 @@ const VIEW_TITLES = {
   contact:  'Contact',
 };
 
+const menuItems    = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
+const projectItems = Array.from(document.querySelectorAll('#view-projects .ipod-menu-item'));
+const itemsByView  = { menu: menuItems, projects: projectItems };
+
 let currentView = 'menu';
-let selectedIndex = 0;
-const menuItems = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
+const indexes = { menu: 0, projects: 0 };
 
 // ─── Helpers ──────────────────────────────────────
+
+function isMenuView() { return currentView === 'menu' || currentView === 'projects'; }
+function currentItems() { return itemsByView[currentView] || []; }
+
+function updateSelection() {
+  const items = currentItems();
+  const i = indexes[currentView] || 0;
+  items.forEach((item, idx) => item.classList.toggle('selected', idx === i));
+}
+
+function bumpIndex(step) {
+  const items = currentItems();
+  if (!items.length) return false;
+  const cur  = indexes[currentView] || 0;
+  const next = Math.max(0, Math.min(items.length - 1, cur + step));
+  if (next === cur) return false;
+  indexes[currentView] = next;
+  updateSelection();
+  return true;
+}
 
 function activeScroll() {
   const v = views[currentView];
@@ -61,16 +84,9 @@ function navigate(view) {
   screenTitle.textContent = VIEW_TITLES[view] || view;
   const el = activeScroll();
   if (el) { el.scrollTop = 0; el.addEventListener('scroll', updateScrollThumb); }
+  updateSelection();
   updateScrollThumb();
 }
-
-function updateMenuSelection() {
-  menuItems.forEach((item, i) => item.classList.toggle('selected', i === selectedIndex));
-}
-
-// ─── Menu clicks ──────────────────────────────────
-
-// Screen is not touch — navigation happens via the clickwheel only.
 
 // ─── Haptics ──────────────────────────────────────
 function buzz(ms = 8) {
@@ -89,7 +105,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
   e.stopPropagation();
   buzz(12);
   if (currentView === 'menu') {
-    const sel = menuItems[selectedIndex];
+    const sel = menuItems[indexes.menu];
     if (sel) navigate(sel.dataset.view);
   }
 });
@@ -106,23 +122,15 @@ function cycleView(step) {
 document.getElementById('btn-fwd').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  if (currentView === 'menu') {
-    selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
-    updateMenuSelection();
-  } else {
-    cycleView(1);
-  }
+  if (isMenuView()) bumpIndex(1);
+  else              cycleView(1);
 });
 
 document.getElementById('btn-bck').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  if (currentView === 'menu') {
-    selectedIndex = Math.max(selectedIndex - 1, 0);
-    updateMenuSelection();
-  } else {
-    cycleView(-1);
-  }
+  if (isMenuView()) bumpIndex(-1);
+  else              cycleView(-1);
 });
 
 // ─── Clickwheel drag ──────────────────────────────
@@ -145,15 +153,12 @@ function distFromCenter(e, el) {
   return Math.sqrt(x * x + y * y);
 }
 
-const CENTER_RADIUS = 28; // matches 56px center hole / 2
+const CENTER_RADIUS = 28;
 
 function onWheelStart(e) {
   if (distFromCenter(e, clickwheel) <= CENTER_RADIUS) return;
   dragging  = true;
   lastAngle = getAngle(e, clickwheel);
-  /* Do NOT preventDefault here — it blocks the synthetic click on touch
-     devices, which would break MENU / fwd / bck / select tap buttons.
-     We only preventDefault once an actual drag movement is detected. */
 }
 
 function onWheelMove(e) {
@@ -163,16 +168,12 @@ function onWheelMove(e) {
   if (delta >  180) delta -= 360;
   if (delta < -180) delta += 360;
   lastAngle = angle;
-  /* Only preventDefault once movement is happening — keeps tap-to-click intact. */
   if (e.cancelable) e.preventDefault();
 
-  if (currentView === 'menu') {
+  if (isMenuView()) {
     wheelAccum += delta;
     if (Math.abs(wheelAccum) > 22) {
-      if (wheelAccum > 0) selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
-      else                selectedIndex = Math.max(selectedIndex - 1, 0);
-      updateMenuSelection();
-      buzz(5);
+      if (bumpIndex(wheelAccum > 0 ? 1 : -1)) buzz(5);
       wheelAccum = 0;
     }
   } else {
@@ -191,28 +192,27 @@ document.addEventListener('touchend',     onWheelEnd);
 
 clickwheel.addEventListener('wheel', e => {
   e.preventDefault();
-  if (currentView === 'menu') {
-    if (e.deltaY > 0) selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
-    else              selectedIndex = Math.max(selectedIndex - 1, 0);
-    updateMenuSelection();
-  } else {
-    scrollBy(e.deltaY * 0.6);
-  }
+  if (isMenuView()) bumpIndex(e.deltaY > 0 ? 1 : -1);
+  else              scrollBy(e.deltaY * 0.6);
 }, { passive: false });
 
 // ─── Keyboard ─────────────────────────────────────
 
 document.addEventListener('keydown', e => {
-  if (currentView === 'menu') {
-    if (e.key === 'ArrowDown')  { selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1); updateMenuSelection(); }
-    if (e.key === 'ArrowUp')    { selectedIndex = Math.max(selectedIndex - 1, 0); updateMenuSelection(); }
-    if (e.key === 'Enter')      { const sel = menuItems[selectedIndex]; if (sel) navigate(sel.dataset.view); }
+  if (isMenuView()) {
+    if (e.key === 'ArrowDown')  bumpIndex(1);
+    if (e.key === 'ArrowUp')    bumpIndex(-1);
+    if (e.key === 'Enter' && currentView === 'menu') {
+      const sel = menuItems[indexes.menu];
+      if (sel) navigate(sel.dataset.view);
+    }
   } else {
     if (e.key === 'ArrowDown')                       scrollBy(22);
     if (e.key === 'ArrowUp')                         scrollBy(-22);
-    if (e.key === 'Escape' || e.key === 'Backspace') navigate('menu');
   }
+  if (e.key === 'Escape' || e.key === 'Backspace') navigate('menu');
 });
 
 // ─── Init ─────────────────────────────────────────
+updateSelection();
 updateScrollThumb();
