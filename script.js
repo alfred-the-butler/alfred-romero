@@ -185,27 +185,24 @@ function buzz(ms = 8) {
   if (isCoarsePointer) iosHapticTick();
 }
 
-// Click-wheel tick — short noise burst, ~12ms, high-passed so it's crisp not boomy.
+// Click-wheel tick — piezo-style 4kHz square-wave burst, ~5ms, matching the
+// original iPod's internal speaker (~10–30 cycles of 4kHz per click).
 let audioCtx;
 function tick() {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const t = audioCtx.currentTime;
-    const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.012), audioCtx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < data.length; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (data.length * 0.18));
-    }
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf;
-    const hp = audioCtx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.value = 2200;
+    const osc = audioCtx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 4000;
     const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.18, t);
-    src.connect(hp).connect(gain).connect(audioCtx.destination);
-    src.start(t);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.10, t + 0.0008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.005);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.006);
   } catch {}
 }
 
