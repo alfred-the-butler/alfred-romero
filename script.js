@@ -146,15 +146,15 @@ function cycleView(step) {
 document.getElementById('btn-fwd').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  if (isMenuView()) bumpIndex(1);
-  else              cycleView(1);
+  if (currentView === 'menu') bumpIndex(1);
+  else                        cycleView(1);
 });
 
 document.getElementById('btn-bck').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  if (isMenuView()) bumpIndex(-1);
-  else              cycleView(-1);
+  if (currentView === 'menu') bumpIndex(-1);
+  else                        cycleView(-1);
 });
 
 // ─── Clickwheel drag ──────────────────────────────
