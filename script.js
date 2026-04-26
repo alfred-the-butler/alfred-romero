@@ -164,8 +164,12 @@ const VIEW_ORDER = ['about', 'projects', 'contact'];
 function cycleView(step) {
   const i = VIEW_ORDER.indexOf(currentView);
   if (i === -1) return;
-  const next = (i + step + VIEW_ORDER.length) % VIEW_ORDER.length;
-  navigate(VIEW_ORDER[next], step > 0 ? 'right' : 'left');
+  const next = i + step;
+  if (next < 0 || next >= VIEW_ORDER.length) {
+    navigate('menu', 'left');
+  } else {
+    navigate(VIEW_ORDER[next], step > 0 ? 'right' : 'left');
+  }
 }
 
 document.getElementById('btn-fwd').addEventListener('click', e => {
