@@ -184,24 +184,26 @@ body {
 }
 
 /* ─── Views ──────────────────────────────────────── */
-.view { display: none; flex: 1; overflow: hidden; }
-.view.active {
-  display: flex;
+.view {
+  position: absolute;
+  top: 22px;          /* below status bar */
+  left: 0; right: 0; bottom: 0;
+  display: none;
   flex-direction: column;
-  animation: fadeIn 0.14s ease;
+  overflow: hidden;
 }
-.view.active.from-right { animation: slideInRight 0.22s ease both; }
-.view.active.from-left  { animation: slideInLeft  0.22s ease both; }
+.view.active, .view.exiting { display: flex; }
+.view.active                 { animation: fadeIn 0.14s ease; }
+.view.active.from-right      { animation: slideInRight 0.32s ease both; }
+.view.active.from-left       { animation: slideInLeft  0.32s ease both; }
+.view.exiting.to-left        { animation: slideOutLeft  0.32s ease both; }
+.view.exiting.to-right       { animation: slideOutRight 0.32s ease both; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
-}
-@keyframes slideInLeft {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(0); }
-}
+@keyframes slideInRight  { from { transform: translateX(100%);  } to { transform: translateX(0); } }
+@keyframes slideInLeft   { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes slideOutLeft  { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+@keyframes slideOutRight { from { transform: translateX(0); } to { transform: translateX(100%);  } }
 
 /* ─── Menu ───────────────────────────────────────── */
 .ipod-menu { list-style: none; width: 100%; }

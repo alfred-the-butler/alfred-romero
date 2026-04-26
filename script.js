@@ -77,13 +77,28 @@ function scrollBy(delta) {
 
 // ─── Navigation ───────────────────────────────────
 
+const TRANSITION_MS = 320;
 function navigate(view, direction) {
-  if (!views[view]) return;
-  Object.values(views).forEach(v => v.classList.remove('active', 'from-right', 'from-left'));
+  if (!views[view] || view === currentView) return;
+  const prev = views[currentView];
   const target = views[view];
+
+  Object.values(views).forEach(v => {
+    if (v !== prev) v.classList.remove('active', 'exiting', 'from-right', 'from-left', 'to-right', 'to-left');
+  });
+
+  if (prev && direction) {
+    prev.classList.remove('active', 'from-right', 'from-left');
+    prev.classList.add('exiting', direction === 'right' ? 'to-left' : 'to-right');
+    setTimeout(() => prev.classList.remove('exiting', 'to-left', 'to-right'), TRANSITION_MS);
+  } else if (prev) {
+    prev.classList.remove('active', 'from-right', 'from-left');
+  }
+
   target.classList.add('active');
   if (direction === 'right') target.classList.add('from-right');
   else if (direction === 'left') target.classList.add('from-left');
+
   currentView = view;
   screenTitle.textContent = VIEW_TITLES[view] || view;
   const el = activeScroll();
