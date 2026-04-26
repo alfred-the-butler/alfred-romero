@@ -89,8 +89,25 @@ function navigate(view) {
 }
 
 // ─── Haptics ──────────────────────────────────────
+// Android: navigator.vibrate. iOS: trigger via synthetic <label> click,
+// which Safari treats as a user gesture on a switch and fires the taptic engine.
+const isCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+function iosHapticTick() {
+  try {
+    const label = document.createElement('label');
+    label.ariaHidden = 'true';
+    label.style.cssText = 'position:absolute;left:-9999px;width:0;height:0;pointer-events:none;';
+    label.htmlFor = 'haptic-switch';
+    document.body.appendChild(label);
+    label.click();
+    document.body.removeChild(label);
+  } catch {}
+}
+
 function buzz(ms = 8) {
-  if (navigator.vibrate) navigator.vibrate(ms);
+  if (navigator.vibrate) { navigator.vibrate(ms); return; }
+  if (isCoarsePointer) iosHapticTick();
 }
 
 // ─── Wheel buttons ────────────────────────────────
