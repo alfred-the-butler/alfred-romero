@@ -103,6 +103,30 @@ function scrollBy(delta) {
   updateScrollThumb();
 }
 
+// ─── Theme spin ───────────────────────────────────
+let spinning = false;
+function spinAndSetTheme(color) {
+  const el = document.getElementById('ipod-3d');
+  if (!el || spinning) return;
+  spinning = true;
+  el.classList.add('spinning');
+  // Swap theme at 270° (edge-on, transitioning back→front) so the back keeps the
+  // old color through its visible window and the front emerges in the new color.
+  setTimeout(() => {
+    if (color === 'purple') {
+      delete document.body.dataset.theme;
+      localStorage.removeItem('ipod-theme');
+    } else {
+      document.body.dataset.theme = color;
+      localStorage.setItem('ipod-theme', color);
+    }
+  }, 750);
+  el.addEventListener('animationend', () => {
+    el.classList.remove('spinning');
+    spinning = false;
+  }, { once: true });
+}
+
 // ─── Navigation ───────────────────────────────────
 
 const TRANSITION_MS = 320;
@@ -178,16 +202,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
     if (window.Brick) Brick.launch();
   } else if (currentView === 'colors') {
     const sel = colorItems[indexes.colors];
-    if (sel && sel.dataset.color) {
-      const c = sel.dataset.color;
-      if (c === 'purple') {
-        delete document.body.dataset.theme;
-        localStorage.removeItem('ipod-theme');
-      } else {
-        document.body.dataset.theme = c;
-        localStorage.setItem('ipod-theme', c);
-      }
-    }
+    if (sel && sel.dataset.color) spinAndSetTheme(sel.dataset.color);
   } else if (currentView === 'contact') {
     const sel = contactItems[indexes.contact];
     if (sel && sel.dataset.href) {
@@ -220,8 +235,8 @@ function cycleView(step) {
 document.getElementById('btn-fwd').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  if (currentView === 'menu') bumpIndex(1);
-  else                        cycleView(1);
+  if (isMenuView()) bumpIndex(1);
+  else              cycleView(1);
 });
 
 document.getElementById('btn-bck').addEventListener('click', e => {

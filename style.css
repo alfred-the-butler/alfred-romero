@@ -52,6 +52,131 @@ body {
   align-items: center;
   justify-content: center;
   padding: 60px 40px 80px;
+  perspective: 1800px;
+}
+
+.ipod-3d {
+  width: 198px;
+  height: 475px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: none;
+}
+.ipod-3d.spinning { animation: spinY 1s ease-in-out; }
+@keyframes spinY {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+.ipod-3d > .ipod,
+.ipod-3d > .ipod-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ipod-3d > .ipod      { transform: translateZ(8px); }
+.ipod-3d > .ipod-back { transform: rotateY(180deg) translateZ(8px); }
+
+.ipod-edge {
+  position: absolute;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.10) 0%,
+      rgba(0,0,0,0.20) 100%
+    ),
+    var(--ipod-base);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ipod-edge-l, .ipod-edge-r {
+  top: 0;
+  left: 50%;
+  width: 16px;
+  height: 475px;
+  margin-left: -8px;
+  border-radius: 50% / 2px;
+}
+.ipod-edge-l { transform: rotateY(-90deg) translateZ(99px); }
+.ipod-edge-r { transform: rotateY(90deg)  translateZ(99px); }
+.ipod-edge-t, .ipod-edge-b {
+  left: 0;
+  top: 50%;
+  width: 198px;
+  height: 16px;
+  margin-top: -8px;
+}
+.ipod-edge-t { transform: rotateX(90deg)  translateZ(237.5px); }
+.ipod-edge-b { transform: rotateX(-90deg) translateZ(237.5px); }
+
+.ipod-back {
+  border-radius: 50% / 2px;
+  transform: rotateY(180deg);
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(255,255,255,0.012) 0px,
+      rgba(255,255,255,0.012) 1px,
+      rgba(0,0,0,0.018) 1px,
+      rgba(0,0,0,0.018) 2px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.18)  0%,
+      rgba(0,0,0,0.16)       18%,
+      rgba(255,255,255,0.24) 36%,
+      rgba(0,0,0,0.12)       54%,
+      rgba(255,255,255,0.18) 72%,
+      rgba(0,0,0,0.20)       90%,
+      rgba(255,255,255,0.10) 100%
+    ),
+    var(--ipod-base);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+    inset 1px 0 0 rgba(255, 255, 255, 0.10),
+    inset -1px 0 0 rgba(0, 0, 0, 0.20),
+    0 0 0 1px rgba(0, 0, 0, 0.40);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.apple-logo {
+  width: 36px;
+  height: 36px;
+  margin-top: 110px;
+  fill: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.15));
+}
+.ipod-back-label {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+.ipod-back-meta {
+  position: absolute;
+  bottom: 36px;
+  left: 0; right: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+.ipod-back-size {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.ipod-back-fineprint {
+  font-size: 5px;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  opacity: 0.7;
 }
 
 /* ─── iPod Body ─────────────────────────────────── */
