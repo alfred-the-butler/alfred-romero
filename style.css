@@ -342,10 +342,10 @@ body {
   transition: color 0.1s;
 }
 .wheel-label, .wheel-center, .wheel { -webkit-tap-highlight-color: transparent; }
-.w-top    { top: 12px;    left: 50%; transform: translateX(-50%); font-size: 9px; }
-.w-bottom { bottom: 13px; left: 50%; transform: translateX(-50%); font-size: 9px; }
-.w-left   { left: 13px;   top: 50%;  transform: translateY(-50%); font-size: 8.5px; }
-.w-right  { right: 13px;  top: 50%;  transform: translateY(-50%); font-size: 8.5px; }
+.w-top    { top: 12px;    left: 50%; transform: translateX(-50%); font-size: 11px; }
+.w-bottom { bottom: 11px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 1px; }
+.w-left   { left: 12px;   top: 50%;  transform: translateY(-50%); font-size: 11px; }
+.w-right  { right: 12px;  top: 50%;  transform: translateY(-50%); font-size: 11px; }
 
 /*
   Center "hole": the body purple showing through the ring.

@@ -155,6 +155,8 @@ document.getElementById('btn-bck').addEventListener('click', e => {
 let dragging  = false;
 let lastAngle = null;
 let wheelAccum = 0;
+let dragMoved = false;
+const DRAG_THRESHOLD = 4; // degrees of cumulative angular movement before we treat as drag
 
 function getAngle(e, el) {
   const r = el.getBoundingClientRect();
@@ -175,6 +177,7 @@ const CENTER_RADIUS = 28;
 function onWheelStart(e) {
   if (distFromCenter(e, clickwheel) <= CENTER_RADIUS) return;
   dragging  = true;
+  dragMoved = false;
   lastAngle = getAngle(e, clickwheel);
 }
 
@@ -185,6 +188,12 @@ function onWheelMove(e) {
   if (delta >  180) delta -= 360;
   if (delta < -180) delta += 360;
   lastAngle = angle;
+  if (!dragMoved) {
+    wheelAccum += delta;
+    if (Math.abs(wheelAccum) < DRAG_THRESHOLD) return;
+    dragMoved = true;
+    wheelAccum = 0;
+  }
   if (e.cancelable) e.preventDefault();
 
   if (isMenuView()) {
@@ -198,7 +207,7 @@ function onWheelMove(e) {
   }
 }
 
-function onWheelEnd() { dragging = false; lastAngle = null; wheelAccum = 0; }
+function onWheelEnd() { dragging = false; lastAngle = null; wheelAccum = 0; dragMoved = false; }
 
 clickwheel.addEventListener('mousedown',  onWheelStart, { passive: false });
 clickwheel.addEventListener('touchstart', onWheelStart, { passive: false });
