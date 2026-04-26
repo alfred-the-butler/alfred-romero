@@ -376,6 +376,7 @@ body {
   transform: translate(-50%, -50%);
   cursor: pointer;
   z-index: 3;
+  transition: transform 0.08s ease, filter 0.08s ease;
 
   /* Match body color exactly */
   background:
@@ -390,6 +391,10 @@ body {
   box-shadow:
     /* Thin ring where wheel meets center */
     0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+.wheel-center:active {
+  filter: brightness(0.88);
 }
 
 /* ─── Bottom connector ───────────────────────────── */
