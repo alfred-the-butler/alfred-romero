@@ -1,0 +1,531 @@
+/* ─── Reset ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Page ──────────────────────────────────────── */
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dedad5;
+  background-image:
+    radial-gradient(ellipse at 25% 15%, #eae6e0 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 85%, #d0cdc8 0%, transparent 55%);
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px 80px;
+}
+
+/* ─── iPod Body ─────────────────────────────────── */
+/*
+  Anodized aluminum — completely matte. No glass, no gloss.
+  The Nano 4th gen surface is flat-finished metal with very
+  subtle directional light from manufacturing grain.
+  All depth comes from edge shadows, not surface reflections.
+*/
+.ipod {
+  width: 198px;
+  height: 475px;
+  border-radius: 0;
+  position: relative;
+
+  /* Anodized aluminum: brushed vertical grain + lateral light sheen.
+     Layer order = grain on top, sheen below, base color underneath. */
+  background:
+    /* Vertical brushed grain — fine satin lines */
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.020) 0px,
+      rgba(255,255,255,0.020) 1px,
+      rgba(0,0,0,0.025) 1px,
+      rgba(0,0,0,0.025) 2px
+    ),
+    /* Lateral light sheen — light grazing across the metal face */
+    linear-gradient(
+      95deg,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.04) 18%,
+      rgba(0,0,0,0.00) 50%,
+      rgba(0,0,0,0.10) 82%,
+      rgba(0,0,0,0.18) 100%
+    ),
+    /* Base anodized purple */
+    #6442A8;
+
+  box-shadow:
+    /* Bright chamfer top — light catching the bevel */
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    /* Dark chamfer bottom — undercut shadow on bevel */
+    inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+    /* Side chamfers — vertical edge specular */
+    inset 1px 0 0 rgba(255, 255, 255, 0.10),
+    inset -1px 0 0 rgba(0, 0, 0, 0.20),
+    /* Hairline outer edge */
+    0 0 0 1px rgba(0, 0, 0, 0.40),
+    /* Contact + ambient stack */
+    0 3px 8px   rgba(40, 15, 100, 0.45),
+    0 12px 32px rgba(35, 10, 90, 0.38),
+    0 28px 65px rgba(25, 5, 75, 0.26),
+    0 48px 100px rgba(0, 0, 0, 0.14);
+}
+
+/* SVG noise overlay — micro-grain of anodized aluminum */
+.ipod::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.65 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ─── Screen Bezel ───────────────────────────────── */
+.screen-bezel {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 178px;
+  padding: 7px;
+  background: #0c0c0c;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 3px 10px rgba(0, 0, 0, 0.95),
+    inset 0 1px 4px  rgba(0, 0, 0, 0.80),
+    inset 1px 0 3px  rgba(0, 0, 0, 0.45),
+    inset -1px 0 3px rgba(0, 0, 0, 0.45),
+    0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 2px 5px rgba(0, 0, 0, 0.50);
+}
+
+/* ─── Screen (LCD) ───────────────────────────────── */
+.screen {
+  width: 164px;
+  height: 216px;
+  background: #f5f3ee;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Status Bar ─────────────────────────────────── */
+.status-bar {
+  height: 22px;
+  flex-shrink: 0;
+  background: linear-gradient(to bottom, #c9c6bf 0%, #a8a59d 50%, #94918a 100%);
+  border-bottom: 1px solid #6e6c66;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7px;
+  position: relative;
+  z-index: 10;
+}
+
+.status-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.40);
+}
+
+.status-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.15px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.battery { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+.battery-body {
+  width: 18px; height: 9px;
+  border: 1px solid #6a6a6a;
+  border-radius: 0;
+  /* Empty cell color — the dark gray you see in the negative space */
+  background: linear-gradient(to bottom, #585858 0%, #4a4a4a 50%, #3e3e3e 100%);
+  position: relative;
+  padding: 0.5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.25);
+}
+.battery-fill {
+  height: 100%;
+  width: 36%;
+  background: linear-gradient(to bottom, #a6e88f 0%, #5fc043 45%, #3fa028 100%);
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.battery-nub {
+  width: 1.5px;
+  height: 4px;
+  background: #6a6a6a;
+  border-radius: 0;
+}
+
+/* ─── Views ──────────────────────────────────────── */
+.view { display: none; flex: 1; overflow: hidden; }
+.view.active {
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.14s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── Menu ───────────────────────────────────────── */
+.ipod-menu { list-style: none; width: 100%; }
+
+.ipod-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 9px;
+  height: 26px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  cursor: default;
+  user-select: none;
+}
+
+.ipod-menu-item.selected {
+  background: linear-gradient(to bottom, #6fb5ff 0%, #2f8fef 50%, #2278d8 100%);
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.item-arrow {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 900;
+  opacity: 0.85;
+  margin-top: -1px;
+}
+.ipod-menu-item.selected .item-arrow { opacity: 1; color: #fff; }
+
+/* ─── Scroll areas ───────────────────────────────── */
+#view-about, #view-projects, #view-contact { flex-direction: row !important; }
+
+.scroll-area { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
+
+.scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 7px 5px 7px 8px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-content::-webkit-scrollbar { display: none; }
+
+.text-body p {
+  font-size: 7.5px;
+  line-height: 1.55;
+  color: #1c1c1c;
+  margin-bottom: 8px;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+.text-body p:last-child { margin-bottom: 0; }
+
+.scroll-track {
+  width: 4px;
+  background: rgba(0,0,0,0.07);
+  margin: 5px 3px 5px 0;
+  border-radius: 2px;
+  position: relative;
+  flex-shrink: 0;
+}
+.scroll-thumb {
+  width: 4px;
+  background: rgba(0,0,0,0.28);
+  border-radius: 2px;
+  position: absolute;
+  top: 0; left: 0;
+  min-height: 14px;
+  transition: top 0.08s linear;
+}
+
+/* ─── Track List ─────────────────────────────────── */
+.track-list { list-style: none; width: 100%; }
+
+.track-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 7px 5px 8px;
+  border-bottom: 1px solid #e2dfd9;
+  cursor: default;
+  user-select: none;
+  min-height: 34px;
+}
+
+.track-details { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.track-title { font-size: 8.5px; font-weight: 600; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-sub { font-size: 7px; color: #888; white-space: nowrap; }
+.track-item .item-arrow { font-size: 14px; color: #bbb; margin-left: 4px; flex-shrink: 0; }
+
+/* ─── Cover Flow ─────────────────────────────────── */
+#view-coverflow {
+  background: #000;
+  flex-direction: column !important;
+}
+
+.cf-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 8px;
+  gap: 0;
+}
+
+.cf-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 110px;
+  position: relative;
+  perspective: 400px;
+}
+
+/* Center card */
+.cf-center {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Side cards */
+.cf-side-left, .cf-side-right {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-40%);
+}
+
+.cf-side-left {
+  left: 10px;
+  transform: translateY(-40%) rotateY(45deg);
+  transform-origin: right center;
+  opacity: 0.7;
+}
+
+.cf-side-right {
+  right: 10px;
+  transform: translateY(-40%) rotateY(-45deg);
+  transform-origin: left center;
+  opacity: 0.7;
+}
+
+/* Album art placeholders */
+.cf-art {
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.cf-center .cf-art { width: 88px; height: 88px; }
+.cf-side-left .cf-art,
+.cf-side-right .cf-art { width: 60px; height: 60px; }
+
+/* 5 placeholder photo gradients — replace with real photos later */
+.cf-art-1 { background: linear-gradient(145deg, #1a1a2e, #16213e, #0f3460, #533483); }
+.cf-art-2 { background: linear-gradient(145deg, #2d1b69, #11998e, #38ef7d); }
+.cf-art-3 { background: linear-gradient(145deg, #fc4a1a, #f7b733); }
+.cf-art-4 { background: linear-gradient(145deg, #141e30, #243b55); }
+.cf-art-5 { background: linear-gradient(145deg, #834d9b, #d04ed6); }
+
+/* Glass shelf line */
+.cf-shelf {
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+  margin-top: 2px;
+}
+
+.cf-reflection {
+  width: 88px;
+  height: 28px;
+  border-radius: 0 0 3px 3px;
+  margin-top: 1px;
+  opacity: 0.25;
+  transform: scaleY(-1);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+}
+
+.cf-title {
+  font-size: 8px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.2px;
+  margin-top: 7px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.cf-dots {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+.cf-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+.cf-dot.active { background: rgba(255,255,255,0.85); }
+
+/* ─── Clickwheel ─────────────────────────────────── */
+.wheel-wrap {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/*
+  Real Nano 4th gen clickwheel: a white/silver RING (donut)
+  with the body color showing through the center hole.
+  NO solid dome — the center is an open hole.
+*/
+.wheel {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  position: relative;
+  user-select: none;
+  cursor: default;
+
+  /* White/silver ring surface — the full circle */
+  background:
+    radial-gradient(
+      ellipse at 40% 35%,
+      #f8f8f8  0%,
+      #eeeeee 30%,
+      #e2e2e2 65%,
+      #d4d4d4 100%
+    );
+
+  box-shadow:
+    /* Subtle surface curve only — wheel is flush with body */
+    inset 0  2px 5px rgba(255, 255, 255, 0.90),
+    inset 3px 0 4px  rgba(255, 255, 255, 0.55),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.12),
+    inset -3px 0 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Ring button labels — sit on the white ring area */
+.wheel-label {
+  position: absolute;
+  font-size: 7px;
+  font-weight: 700;
+  color: #7a7a7a;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  z-index: 4;
+  line-height: 1;
+  transition: color 0.1s;
+}
+.wheel-label:active { color: #333; }
+.w-top    { top: 12px;    left: 50%; transform: translateX(-50%); font-size: 9px; }
+.w-bottom { bottom: 13px; left: 50%; transform: translateX(-50%); font-size: 9px; }
+.w-left   { left: 13px;   top: 50%;  transform: translateY(-50%); font-size: 8.5px; }
+.w-right  { right: 13px;  top: 50%;  transform: translateY(-50%); font-size: 8.5px; }
+
+/*
+  Center "hole": the body purple showing through the ring.
+  This is the defining feature of the Nano 4th gen clickwheel.
+  It's not a dome — it's the aluminum body exposed in the center.
+*/
+.wheel-center {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 3;
+
+  /* Match body color exactly */
+  background:
+    radial-gradient(
+      circle at 42% 36%,
+      #7454BC 0%,
+      #6646AE 35%,
+      #5E3EA6 70%,
+      #5A3AA2 100%
+    );
+
+  box-shadow:
+    /* Thin ring where wheel meets center */
+    0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+/* ─── Bottom connector ───────────────────────────── */
+.ipod-bottom-edge {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dock-connector {
+  width: 46px;
+  height: 7px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #181818, #0c0c0c);
+  position: relative;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.dock-connector::before {
+  content: '';
+  position: absolute;
+  top: 2px; left: 4px; right: 4px;
+  height: 3px;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    #2a2a2a 0px, #2a2a2a 1.5px,
+    #0e0e0e 1.5px, #0e0e0e 3px
+  );
+}
+
+/* ─── Landscape (Cover Flow) ─────────────────────── */
+@media (orientation: landscape) {
+  .stage { padding: 20px; }
+
+  .ipod {
+    /* Scale down so it fits in landscape viewport */
+    transform: scale(0.72);
+    transform-origin: center center;
+  }
+}
