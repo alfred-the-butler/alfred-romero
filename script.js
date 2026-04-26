@@ -115,28 +115,93 @@ function scrollBy(delta) {
   updateScrollThumb();
 }
 
-// ─── Theme spin ───────────────────────────────────
+// ─── Theme conveyor ───────────────────────────────
+// Conveyor-belt animation: pull back, slide current iPod off-screen, slide
+// each color in the list between current and target across the stage, park
+// the final one at center, and push it forward. Direction follows list order
+// (forward through list → belt moves rightward; backward → leftward).
 let spinning = false;
-function spinAndSetTheme(color) {
+const COLOR_ORDER = ['red','orange','yellow','green','blue','pink','purple','silver','black'];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+function applyTheme(color) {
+  if (color === 'purple') {
+    delete document.body.dataset.theme;
+    localStorage.removeItem('ipod-theme');
+  } else {
+    document.body.dataset.theme = color;
+    localStorage.setItem('ipod-theme', color);
+  }
+}
+
+// Belt physical layout: red leftmost, black rightmost. Going forward through
+// the list (e.g. red → black) scrolls the camera rightward, so iPods on stage
+// move leftward and exit on the left. Going backward reverses both.
+async function conveyorToTheme(target) {
   const el = document.getElementById('ipod-3d');
   if (!el || spinning) return;
+  const current = document.body.dataset.theme || 'purple';
+  const ci = COLOR_ORDER.indexOf(current);
+  const ti = COLOR_ORDER.indexOf(target);
+  if (ci < 0 || ti < 0 || ci === ti) return;
+
   spinning = true;
-  el.classList.add('spinning');
-  // Swap theme at 270° (edge-on, transitioning back→front) so the back keeps the
-  // old color through its visible window and the front emerges in the new color.
-  setTimeout(() => {
-    if (color === 'purple') {
-      delete document.body.dataset.theme;
-      localStorage.removeItem('ipod-theme');
-    } else {
-      document.body.dataset.theme = color;
-      localStorage.setItem('ipod-theme', color);
+  el.classList.add('conveyor');
+
+  const N      = Math.abs(ti - ci);
+  const dir    = Math.sign(ti - ci);  // +1 forward in list, -1 backward
+  const xSign  = -dir;                // forward → iPods exit left (negative x)
+  // Lane wider than the viewport so the iPod fully exits before the color swap
+  // (iPod is ~200px wide; +200 buffer guarantees offscreen on desktop and mobile).
+  const lane   = Math.max(window.innerWidth, 320) + 400;
+  const Z      = -50;
+  // One continuous ease-in-out across the whole traversal so motion feels fluid.
+  const beltMs = Math.round(620 + N * 95);
+  const ease   = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+  // Pull back into the stage.
+  el.style.transition = 'transform 200ms ease-in';
+  el.style.transform  = `translate3d(0, 0, ${Z}px)`;
+  await wait(210);
+  el.style.transition = 'none';
+
+  await new Promise(resolve => {
+    const start = performance.now();
+    let applied = 0;
+    function frame(now) {
+      const t = Math.min(1, (now - start) / beltMs);
+      const d = ease(t) * N * lane;
+      // Snap to the lane whose center is currently nearest the iPod's onscreen
+      // position; swap the theme each time we cross into a new lane.
+      const laneIdx = Math.min(N, Math.floor(d / lane + 0.5));
+      while (applied < laneIdx) {
+        applied++;
+        applyTheme(COLOR_ORDER[ci + dir * applied]);
+      }
+      const x = (d - laneIdx * lane) * xSign;
+      el.style.transform = `translate3d(${x}px, 0, ${Z}px)`;
+      if (t < 1) requestAnimationFrame(frame);
+      else {
+        while (applied < N) {
+          applied++;
+          applyTheme(COLOR_ORDER[ci + dir * applied]);
+        }
+        el.style.transform = `translate3d(0, 0, ${Z}px)`;
+        resolve();
+      }
     }
-  }, 750);
-  el.addEventListener('animationend', () => {
-    el.classList.remove('spinning');
-    spinning = false;
-  }, { once: true });
+    requestAnimationFrame(frame);
+  });
+
+  // Push forward to resting depth.
+  el.style.transition = 'transform 220ms ease-out';
+  el.style.transform  = 'translate3d(0, 0, 0)';
+  await wait(230);
+
+  el.style.transition = '';
+  el.style.transform  = '';
+  el.classList.remove('conveyor');
+  spinning = false;
 }
 
 // ─── Navigation ───────────────────────────────────
@@ -236,7 +301,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
     if (window.Brick) Brick.launch();
   } else if (currentView === 'colors') {
     const sel = colorItems[indexes.colors];
-    if (sel && sel.dataset.color) spinAndSetTheme(sel.dataset.color);
+    if (sel && sel.dataset.color) conveyorToTheme(sel.dataset.color);
   } else if (currentView === 'contact') {
     const sel = contactItems[indexes.contact];
     if (sel && sel.dataset.href) {

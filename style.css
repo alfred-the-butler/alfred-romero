@@ -134,11 +134,7 @@ body {
   transform-style: preserve-3d;
   transition: none;
 }
-.ipod-3d.spinning { animation: spinY 1s ease-in-out; }
-@keyframes spinY {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
-}
+.ipod-3d.conveyor { will-change: transform; }
 
 .ipod-3d > .ipod,
 .ipod-3d > .ipod-back {
