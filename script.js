@@ -17,7 +17,7 @@ const VIEW_TITLES = {
 
 let currentView = 'menu';
 let selectedIndex = 0;
-const menuItems = Array.from(document.querySelectorAll('.ipod-menu-item'));
+const menuItems = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
 
 // ─── Helpers ──────────────────────────────────────
 
@@ -94,6 +94,15 @@ document.getElementById('btn-select').addEventListener('click', e => {
   }
 });
 
+const VIEW_ORDER = ['about', 'projects', 'contact'];
+
+function cycleView(step) {
+  const i = VIEW_ORDER.indexOf(currentView);
+  if (i === -1) return;
+  const next = (i + step + VIEW_ORDER.length) % VIEW_ORDER.length;
+  navigate(VIEW_ORDER[next]);
+}
+
 document.getElementById('btn-fwd').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
@@ -101,7 +110,7 @@ document.getElementById('btn-fwd').addEventListener('click', e => {
     selectedIndex = Math.min(selectedIndex + 1, menuItems.length - 1);
     updateMenuSelection();
   } else {
-    scrollBy(30);
+    cycleView(1);
   }
 });
 
@@ -112,7 +121,7 @@ document.getElementById('btn-bck').addEventListener('click', e => {
     selectedIndex = Math.max(selectedIndex - 1, 0);
     updateMenuSelection();
   } else {
-    scrollBy(-30);
+    cycleView(-1);
   }
 });
 
