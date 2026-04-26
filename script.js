@@ -5,6 +5,8 @@ const views = {
   contact:  document.getElementById('view-contact'),
   settings: document.getElementById('view-settings'),
   colors:   document.getElementById('view-colors'),
+  games:    document.getElementById('view-games'),
+  brick:    document.getElementById('view-brick'),
 };
 
 const screenTitle = document.getElementById('screen-title');
@@ -17,6 +19,8 @@ const VIEW_TITLES = {
   contact:  'Contact',
   settings: 'Settings',
   colors:   'Colors',
+  games:    'Games',
+  brick:    'Brick',
 };
 
 const PARENT = {
@@ -25,6 +29,8 @@ const PARENT = {
   contact: 'menu',
   settings: 'menu',
   colors: 'settings',
+  games: 'menu',
+  brick: 'games',
 };
 
 const menuItems     = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
@@ -32,10 +38,11 @@ const projectItems  = Array.from(document.querySelectorAll('#view-projects .ipod
 const contactItems  = Array.from(document.querySelectorAll('#view-contact .ipod-menu-item'));
 const settingsItems = Array.from(document.querySelectorAll('#view-settings .ipod-menu-item'));
 const colorItems    = Array.from(document.querySelectorAll('#view-colors .ipod-menu-item'));
-const itemsByView   = { menu: menuItems, projects: projectItems, contact: contactItems, settings: settingsItems, colors: colorItems };
+const gamesItems    = Array.from(document.querySelectorAll('#view-games .ipod-menu-item'));
+const itemsByView   = { menu: menuItems, projects: projectItems, contact: contactItems, settings: settingsItems, colors: colorItems, games: gamesItems };
 
 let currentView = 'menu';
-const indexes = { menu: 0, projects: 0, contact: 0, settings: 0, colors: 0 };
+const indexes = { menu: 0, projects: 0, contact: 0, settings: 0, colors: 0, games: 0 };
 
 // Restore saved theme + sync colors selection
 const savedTheme = localStorage.getItem('ipod-theme');
@@ -104,6 +111,9 @@ function navigate(view, direction) {
   const prev = views[currentView];
   const target = views[view];
 
+  if (currentView === 'brick' && window.Brick) Brick.stop();
+  if (view === 'brick' && window.Brick) Brick.start(document.getElementById('brick-canvas'));
+
   Object.values(views).forEach(v => {
     if (v !== prev) v.classList.remove('active', 'exiting', 'from-right', 'from-left', 'to-right', 'to-left');
   });
@@ -161,9 +171,11 @@ document.getElementById('btn-menu').addEventListener('click', e => {
 document.getElementById('btn-select').addEventListener('click', e => {
   e.stopPropagation();
   buzz(12);
-  if (currentView === 'menu' || currentView === 'settings') {
+  if (currentView === 'menu' || currentView === 'settings' || currentView === 'games') {
     const sel = currentItems()[indexes[currentView]];
     if (sel && sel.dataset.view) navigate(sel.dataset.view, 'right');
+  } else if (currentView === 'brick') {
+    if (window.Brick) Brick.launch();
   } else if (currentView === 'colors') {
     const sel = colorItems[indexes.colors];
     if (sel && sel.dataset.color) {
@@ -265,7 +277,9 @@ function onWheelMove(e) {
   }
   if (e.cancelable) e.preventDefault();
 
-  if (isMenuView()) {
+  if (currentView === 'brick') {
+    if (window.Brick) Brick.movePaddle(delta * 1.4);
+  } else if (isMenuView()) {
     wheelAccum += delta;
     if (Math.abs(wheelAccum) > 22) {
       if (bumpIndex(wheelAccum > 0 ? 1 : -1)) buzz(5);
@@ -294,6 +308,13 @@ clickwheel.addEventListener('wheel', e => {
 // ─── Keyboard ─────────────────────────────────────
 
 document.addEventListener('keydown', e => {
+  if (currentView === 'brick') {
+    if (e.key === 'ArrowLeft')  { Brick.movePaddle(-8); return; }
+    if (e.key === 'ArrowRight') { Brick.movePaddle(8);  return; }
+    if (e.key === 'Enter' || e.key === ' ') { Brick.launch(); return; }
+    if (e.key === 'Escape' || e.key === 'Backspace') navigate('games', 'left');
+    return;
+  }
   if (isMenuView()) {
     if (e.key === 'ArrowDown')  bumpIndex(1);
     if (e.key === 'ArrowUp')    bumpIndex(-1);

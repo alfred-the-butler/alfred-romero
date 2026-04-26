@@ -35,6 +35,10 @@
                 <span class="item-name">Projects</span>
                 <span class="item-arrow">&#8250;</span>
               </li>
+              <li class="ipod-menu-item" data-view="games">
+                <span class="item-name">Games</span>
+                <span class="item-arrow">&#8250;</span>
+              </li>
               <li class="ipod-menu-item" data-view="contact">
                 <span class="item-name">Contact</span>
                 <span class="item-arrow">&#8250;</span>
@@ -136,6 +140,26 @@
             </div>
           </div>
 
+          <!-- ── Games ─────────────────────────── -->
+          <div class="view" id="view-games">
+            <div class="scroll-area">
+              <div class="scroll-content">
+                <ul class="ipod-menu">
+                  <li class="ipod-menu-item selected" data-view="brick">
+                    <span class="item-name">Brick</span>
+                    <span class="item-arrow">&#8250;</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="scroll-track"><div class="scroll-thumb"></div></div>
+            </div>
+          </div>
+
+          <!-- ── Brick ─────────────────────────── -->
+          <div class="view" id="view-brick">
+            <canvas id="brick-canvas"></canvas>
+          </div>
+
           <!-- ── Contact ───────────────────────── -->
           <div class="view" id="view-contact">
             <div class="scroll-area">
@@ -177,6 +201,7 @@
   </div>
 
   <input type="checkbox" switch id="haptic-switch" aria-hidden="true" tabindex="-1" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+  <script src="brick.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

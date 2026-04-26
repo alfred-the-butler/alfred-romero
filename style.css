@@ -269,7 +269,19 @@ body {
 .ipod-menu-item.selected .item-arrow { opacity: 1; color: #fff; }
 
 /* ─── Scroll areas ───────────────────────────────── */
-#view-about, #view-projects, #view-contact, #view-settings, #view-colors { flex-direction: row !important; }
+#view-about, #view-projects, #view-contact, #view-settings, #view-colors, #view-games { flex-direction: row !important; }
+
+#view-brick {
+  background: #87ceeb;
+  align-items: stretch;
+  justify-content: center;
+}
+#view-brick canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
 
 .scroll-area { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
 
@@ -286,11 +298,13 @@ body {
 #view-projects .scroll-content,
 #view-contact  .scroll-content,
 #view-settings .scroll-content,
-#view-colors   .scroll-content { padding: 0; }
+#view-colors   .scroll-content,
+#view-games    .scroll-content { padding: 0; }
 #view-projects .scroll-track,
 #view-contact  .scroll-track,
 #view-settings .scroll-track,
-#view-colors   .scroll-track { display: none; }
+#view-colors   .scroll-track,
+#view-games    .scroll-track { display: none; }
 
 .text-body p {
   font-size: 9.5px;
