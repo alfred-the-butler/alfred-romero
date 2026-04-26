@@ -434,6 +434,42 @@ body {
 /* ─── Menu ───────────────────────────────────────── */
 .ipod-menu { list-style: none; width: 100%; }
 
+/* ─── Photo strip (main menu only) ───────────────── */
+#view-menu { justify-content: space-between; }
+#view-menu .ipod-menu { flex-shrink: 0; }
+.photo-strip {
+  flex-shrink: 0;
+  height: 57px;
+  padding: 2px;
+  background: linear-gradient(to bottom, #1f1f1f 0%, #0e0e0e 100%);
+  border-top: 1px solid #4a4a4a;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+}
+.photo-strip-track {
+  display: flex;
+  gap: 2px;
+  height: 100%;
+  will-change: transform;
+}
+.photo-tile {
+  flex: 0 0 53px;
+  height: 53px;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
 .ipod-menu-item {
   display: flex;
   align-items: center;

@@ -454,6 +454,59 @@ function primeAudio() {
   document.addEventListener(ev, primeAudio, { once: true, passive: true, capture: true });
 });
 
+// ─── Photo strip ──────────────────────────────────
+// Drop more JPGs into /photos and add their filenames here. Squares are
+// enforced by CSS (object-fit: cover) so source aspect ratios don't matter.
+const PHOTOS = [
+  'photos/photo-01.jpg',
+  'photos/photo-02.jpg',
+];
+
+function initPhotoStrip() {
+  const track = document.getElementById('photo-strip-track');
+  if (!track || PHOTOS.length === 0) return;
+
+  // Need at least 4 tiles in the track (3 visible + 1 about to enter from
+  // the right). Repeat the photo list until we have enough.
+  const need = Math.max(4, PHOTOS.length);
+  for (let i = 0; i < need; i++) {
+    const tile = document.createElement('div');
+    tile.className = 'photo-tile';
+    const img = document.createElement('img');
+    img.src = PHOTOS[i % PHOTOS.length];
+    img.alt = '';
+    img.loading = i < 4 ? 'eager' : 'lazy';
+    tile.appendChild(img);
+    track.appendChild(tile);
+  }
+
+  if (PHOTOS.length < 2) return; // nothing to rotate to
+
+  // Continuous slow scroll: ~12px/s leftward. When the leftmost tile is fully
+  // off-screen we move it to the end of the track and subtract its width from
+  // the offset so motion stays seamless.
+  const SPEED = 12; // px per second
+  let offset = 0;
+  let last = performance.now();
+  function step(now) {
+    const dt = Math.min(64, now - last) / 1000;
+    last = now;
+    if (currentView === 'menu') {
+      offset += SPEED * dt;
+      const first = track.firstElementChild;
+      const tileW = first ? first.getBoundingClientRect().width + 2 : 55;
+      while (offset >= tileW && track.firstElementChild) {
+        offset -= tileW;
+        track.appendChild(track.firstElementChild);
+      }
+      track.style.transform = `translateX(${-offset}px)`;
+    }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 // ─── Init ─────────────────────────────────────────
 updateSelection();
 updateScrollThumb();
+initPhotoStrip();
