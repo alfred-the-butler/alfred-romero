@@ -3,6 +3,8 @@ const views = {
   about:    document.getElementById('view-about'),
   projects: document.getElementById('view-projects'),
   contact:  document.getElementById('view-contact'),
+  settings: document.getElementById('view-settings'),
+  colors:   document.getElementById('view-colors'),
 };
 
 const screenTitle = document.getElementById('screen-title');
@@ -13,15 +15,34 @@ const VIEW_TITLES = {
   about:    'About',
   projects: 'Projects',
   contact:  'Contact',
+  settings: 'Settings',
+  colors:   'Colors',
 };
 
-const menuItems    = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
-const projectItems = Array.from(document.querySelectorAll('#view-projects .ipod-menu-item'));
-const contactItems = Array.from(document.querySelectorAll('#view-contact .ipod-menu-item'));
-const itemsByView  = { menu: menuItems, projects: projectItems, contact: contactItems };
+const PARENT = {
+  about: 'menu',
+  projects: 'menu',
+  contact: 'menu',
+  settings: 'menu',
+  colors: 'settings',
+};
+
+const menuItems     = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
+const projectItems  = Array.from(document.querySelectorAll('#view-projects .ipod-menu-item'));
+const contactItems  = Array.from(document.querySelectorAll('#view-contact .ipod-menu-item'));
+const settingsItems = Array.from(document.querySelectorAll('#view-settings .ipod-menu-item'));
+const colorItems    = Array.from(document.querySelectorAll('#view-colors .ipod-menu-item'));
+const itemsByView   = { menu: menuItems, projects: projectItems, contact: contactItems, settings: settingsItems, colors: colorItems };
 
 let currentView = 'menu';
-const indexes = { menu: 0, projects: 0, contact: 0 };
+const indexes = { menu: 0, projects: 0, contact: 0, settings: 0, colors: 0 };
+
+// Restore saved theme + sync colors selection
+const savedTheme = localStorage.getItem('ipod-theme');
+if (savedTheme) document.body.dataset.theme = savedTheme;
+const initialColor = savedTheme || 'purple';
+const initialColorIdx = colorItems.findIndex(it => it.dataset.color === initialColor);
+if (initialColorIdx >= 0) indexes.colors = initialColorIdx;
 
 // ─── Helpers ──────────────────────────────────────
 
@@ -140,9 +161,21 @@ document.getElementById('btn-menu').addEventListener('click', e => {
 document.getElementById('btn-select').addEventListener('click', e => {
   e.stopPropagation();
   buzz(12);
-  if (currentView === 'menu') {
-    const sel = menuItems[indexes.menu];
-    if (sel) navigate(sel.dataset.view, 'right');
+  if (currentView === 'menu' || currentView === 'settings') {
+    const sel = currentItems()[indexes[currentView]];
+    if (sel && sel.dataset.view) navigate(sel.dataset.view, 'right');
+  } else if (currentView === 'colors') {
+    const sel = colorItems[indexes.colors];
+    if (sel && sel.dataset.color) {
+      const c = sel.dataset.color;
+      if (c === 'purple') {
+        delete document.body.dataset.theme;
+        localStorage.removeItem('ipod-theme');
+      } else {
+        document.body.dataset.theme = c;
+        localStorage.setItem('ipod-theme', c);
+      }
+    }
   } else if (currentView === 'contact') {
     const sel = contactItems[indexes.contact];
     if (sel && sel.dataset.href) {
@@ -183,7 +216,7 @@ document.getElementById('btn-bck').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
   if (currentView === 'menu') bumpIndex(-1);
-  else                        navigate('menu', 'left');
+  else                        navigate(PARENT[currentView] || 'menu', 'left');
 });
 
 // ─── Clickwheel drag ──────────────────────────────

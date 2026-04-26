@@ -1,6 +1,38 @@
 /* ─── Reset ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ─── Theme ─────────────────────────────────────── */
+:root {
+  --ipod-base: #6442A8;
+  --center-1: #7454BC;
+  --center-2: #6646AE;
+  --center-3: #5E3EA6;
+  --center-4: #5A3AA2;
+  --shadow-1: rgba(40, 15, 100, 0.45);
+  --shadow-2: rgba(35, 10, 90, 0.38);
+  --shadow-3: rgba(25, 5, 75, 0.26);
+}
+body[data-theme="blue"] {
+  --ipod-base: #2E5BA8;
+  --center-1: #4A7BC8;
+  --center-2: #3A68B8;
+  --center-3: #2F5AA8;
+  --center-4: #2A529E;
+  --shadow-1: rgba(15, 40, 100, 0.45);
+  --shadow-2: rgba(10, 35, 90, 0.38);
+  --shadow-3: rgba(5, 25, 75, 0.26);
+}
+body[data-theme="orange"] {
+  --ipod-base: #D86A1A;
+  --center-1: #F08840;
+  --center-2: #DC7220;
+  --center-3: #C66218;
+  --center-4: #B85A14;
+  --shadow-1: rgba(120, 50, 10, 0.45);
+  --shadow-2: rgba(100, 40, 5, 0.38);
+  --shadow-3: rgba(80, 30, 0, 0.26);
+}
+
 /* ─── Page ──────────────────────────────────────── */
 html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 body {
@@ -58,8 +90,8 @@ body {
       rgba(0,0,0,0.22)       88%,
       rgba(255,255,255,0.10) 100%
     ),
-    /* Base anodized purple */
-    #6442A8;
+    /* Base anodized color */
+    var(--ipod-base);
 
   box-shadow:
     /* Bright chamfer top — light catching the bevel */
@@ -72,9 +104,9 @@ body {
     /* Hairline outer edge */
     0 0 0 1px rgba(0, 0, 0, 0.40),
     /* Contact + ambient stack */
-    0 3px 8px   rgba(40, 15, 100, 0.45),
-    0 12px 32px rgba(35, 10, 90, 0.38),
-    0 28px 65px rgba(25, 5, 75, 0.26),
+    0 3px 8px   var(--shadow-1),
+    0 12px 32px var(--shadow-2),
+    0 28px 65px var(--shadow-3),
     0 48px 100px rgba(0, 0, 0, 0.14);
 }
 
@@ -237,7 +269,7 @@ body {
 .ipod-menu-item.selected .item-arrow { opacity: 1; color: #fff; }
 
 /* ─── Scroll areas ───────────────────────────────── */
-#view-about, #view-projects, #view-contact { flex-direction: row !important; }
+#view-about, #view-projects, #view-contact, #view-settings, #view-colors { flex-direction: row !important; }
 
 .scroll-area { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
 
@@ -252,9 +284,13 @@ body {
 }
 .scroll-content::-webkit-scrollbar { display: none; }
 #view-projects .scroll-content,
-#view-contact  .scroll-content { padding: 0; }
+#view-contact  .scroll-content,
+#view-settings .scroll-content,
+#view-colors   .scroll-content { padding: 0; }
 #view-projects .scroll-track,
-#view-contact  .scroll-track { display: none; }
+#view-contact  .scroll-track,
+#view-settings .scroll-track,
+#view-colors   .scroll-track { display: none; }
 
 .text-body p {
   font-size: 9.5px;
@@ -382,10 +418,10 @@ body {
   background:
     radial-gradient(
       circle at 42% 36%,
-      #7454BC 0%,
-      #6646AE 35%,
-      #5E3EA6 70%,
-      #5A3AA2 100%
+      var(--center-1) 0%,
+      var(--center-2) 35%,
+      var(--center-3) 70%,
+      var(--center-4) 100%
     );
 
   box-shadow:
