@@ -128,8 +128,15 @@ document.getElementById('btn-select').addEventListener('click', e => {
   } else if (currentView === 'contact') {
     const sel = contactItems[indexes.contact];
     if (sel && sel.dataset.href) {
-      const target = sel.dataset.target || '_self';
-      window.open(sel.dataset.href, target);
+      const a = document.createElement('a');
+      a.href = sel.dataset.href;
+      if (sel.dataset.target) {
+        a.target = sel.dataset.target;
+        a.rel = 'noopener noreferrer';
+      }
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
   }
 });
