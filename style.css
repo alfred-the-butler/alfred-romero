@@ -521,11 +521,10 @@ body {
 
 /* ─── Landscape (Cover Flow) ─────────────────────── */
 @media (orientation: landscape) {
-  .stage { padding: 20px; }
+  .stage { padding: 6px; min-height: 100vh; }
 
+  /* Use zoom so the layout box actually shrinks to fit landscape height. */
   .ipod {
-    /* Scale down so it fits in landscape viewport */
-    transform: scale(0.72);
-    transform-origin: center center;
+    zoom: 0.74;
   }
 }
