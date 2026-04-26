@@ -70,6 +70,7 @@ function bumpIndex(step) {
   if (next === cur) return false;
   indexes[currentView] = next;
   updateSelection();
+  tick();
   return true;
 }
 
@@ -184,6 +185,30 @@ function buzz(ms = 8) {
   if (isCoarsePointer) iosHapticTick();
 }
 
+// Click-wheel tick — short noise burst, ~12ms, high-passed so it's crisp not boomy.
+let audioCtx;
+function tick() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t = audioCtx.currentTime;
+    const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.012), audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (data.length * 0.18));
+    }
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    const hp = audioCtx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 2200;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.18, t);
+    src.connect(hp).connect(gain).connect(audioCtx.destination);
+    src.start(t);
+  } catch {}
+}
+
 // ─── Wheel buttons ────────────────────────────────
 
 document.getElementById('btn-menu').addEventListener('click', e => {
@@ -195,6 +220,7 @@ document.getElementById('btn-menu').addEventListener('click', e => {
 document.getElementById('btn-select').addEventListener('click', e => {
   e.stopPropagation();
   buzz(12);
+  tick();
   if (currentView === 'menu' || currentView === 'settings' || currentView === 'games') {
     const sel = currentItems()[indexes[currentView]];
     if (sel && sel.dataset.view) navigate(sel.dataset.view, 'right');
