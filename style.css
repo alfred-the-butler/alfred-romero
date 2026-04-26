@@ -190,8 +190,18 @@ body {
   flex-direction: column;
   animation: fadeIn 0.14s ease;
 }
+.view.active.from-right { animation: slideInRight 0.22s ease both; }
+.view.active.from-left  { animation: slideInLeft  0.22s ease both; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
 
 /* ─── Menu ───────────────────────────────────────── */
 .ipod-menu { list-style: none; width: 100%; }

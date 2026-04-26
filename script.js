@@ -77,10 +77,13 @@ function scrollBy(delta) {
 
 // ─── Navigation ───────────────────────────────────
 
-function navigate(view) {
+function navigate(view, direction) {
   if (!views[view]) return;
-  Object.values(views).forEach(v => v.classList.remove('active'));
-  views[view].classList.add('active');
+  Object.values(views).forEach(v => v.classList.remove('active', 'from-right', 'from-left'));
+  const target = views[view];
+  target.classList.add('active');
+  if (direction === 'right') target.classList.add('from-right');
+  else if (direction === 'left') target.classList.add('from-left');
   currentView = view;
   screenTitle.textContent = VIEW_TITLES[view] || view;
   const el = activeScroll();
@@ -116,7 +119,7 @@ function buzz(ms = 8) {
 document.getElementById('btn-menu').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
-  navigate('menu');
+  navigate('menu', 'left');
 });
 
 document.getElementById('btn-select').addEventListener('click', e => {
@@ -124,7 +127,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
   buzz(12);
   if (currentView === 'menu') {
     const sel = menuItems[indexes.menu];
-    if (sel) navigate(sel.dataset.view);
+    if (sel) navigate(sel.dataset.view, 'right');
   } else if (currentView === 'contact') {
     const sel = contactItems[indexes.contact];
     if (sel && sel.dataset.href) {
@@ -147,7 +150,7 @@ function cycleView(step) {
   const i = VIEW_ORDER.indexOf(currentView);
   if (i === -1) return;
   const next = (i + step + VIEW_ORDER.length) % VIEW_ORDER.length;
-  navigate(VIEW_ORDER[next]);
+  navigate(VIEW_ORDER[next], step > 0 ? 'right' : 'left');
 }
 
 document.getElementById('btn-fwd').addEventListener('click', e => {
@@ -161,7 +164,7 @@ document.getElementById('btn-bck').addEventListener('click', e => {
   e.stopPropagation();
   buzz();
   if (currentView === 'menu') bumpIndex(-1);
-  else                        cycleView(-1);
+  else                        navigate('menu', 'left');
 });
 
 // ─── Clickwheel drag ──────────────────────────────
@@ -244,13 +247,13 @@ document.addEventListener('keydown', e => {
     if (e.key === 'ArrowUp')    bumpIndex(-1);
     if (e.key === 'Enter' && currentView === 'menu') {
       const sel = menuItems[indexes.menu];
-      if (sel) navigate(sel.dataset.view);
+      if (sel) navigate(sel.dataset.view, 'right');
     }
   } else {
     if (e.key === 'ArrowDown')                       scrollBy(22);
     if (e.key === 'ArrowUp')                         scrollBy(-22);
   }
-  if (e.key === 'Escape' || e.key === 'Backspace') navigate('menu');
+  if (e.key === 'Escape' || e.key === 'Backspace') navigate('menu', 'left');
 });
 
 // ─── Init ─────────────────────────────────────────
