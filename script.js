@@ -17,14 +17,15 @@ const VIEW_TITLES = {
 
 const menuItems    = Array.from(document.querySelectorAll('#view-menu .ipod-menu-item'));
 const projectItems = Array.from(document.querySelectorAll('#view-projects .ipod-menu-item'));
-const itemsByView  = { menu: menuItems, projects: projectItems };
+const contactItems = Array.from(document.querySelectorAll('#view-contact .ipod-menu-item'));
+const itemsByView  = { menu: menuItems, projects: projectItems, contact: contactItems };
 
 let currentView = 'menu';
-const indexes = { menu: 0, projects: 0 };
+const indexes = { menu: 0, projects: 0, contact: 0 };
 
 // ─── Helpers ──────────────────────────────────────
 
-function isMenuView() { return currentView === 'menu' || currentView === 'projects'; }
+function isMenuView() { return currentView in itemsByView; }
 function currentItems() { return itemsByView[currentView] || []; }
 
 function updateSelection() {
@@ -124,6 +125,12 @@ document.getElementById('btn-select').addEventListener('click', e => {
   if (currentView === 'menu') {
     const sel = menuItems[indexes.menu];
     if (sel) navigate(sel.dataset.view);
+  } else if (currentView === 'contact') {
+    const sel = contactItems[indexes.contact];
+    if (sel && sel.dataset.href) {
+      const target = sel.dataset.target || '_self';
+      window.open(sel.dataset.href, target);
+    }
   }
 });
 
