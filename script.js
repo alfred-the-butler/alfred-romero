@@ -60,6 +60,17 @@ function updateSelection() {
   const items = currentItems();
   const i = indexes[currentView] || 0;
   items.forEach((item, idx) => item.classList.toggle('selected', idx === i));
+  const sel = items[i];
+  const scroller = activeScroll();
+  if (sel && scroller) {
+    const sTop = sel.offsetTop;
+    const sBot = sTop + sel.offsetHeight;
+    const vTop = scroller.scrollTop;
+    const vBot = vTop + scroller.clientHeight;
+    if (sBot > vBot)      scroller.scrollTop = sBot - scroller.clientHeight;
+    else if (sTop < vTop) scroller.scrollTop = sTop;
+    updateScrollThumb();
+  }
 }
 
 function bumpIndex(step) {
@@ -365,6 +376,17 @@ document.addEventListener('keydown', e => {
     if (e.key === 'ArrowUp')                         scrollBy(-22);
   }
   if (e.key === 'Escape' || e.key === 'Backspace') navigate('menu', 'left');
+});
+
+// Prime AudioContext on first user gesture so the very first tick is audible.
+function primeAudio() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch {}
+}
+['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(ev => {
+  document.addEventListener(ev, primeAudio, { once: true, passive: true, capture: true });
 });
 
 // ─── Init ─────────────────────────────────────────
