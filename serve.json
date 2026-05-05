@@ -15,5 +15,14 @@
     }
   ],
   "cleanUrls": false,
-  "directoryListing": false
+  "unlisted": [
+    "node_modules",
+    "package.json",
+    "package-lock.json",
+    "serve.json",
+    ".gitignore",
+    "brick.js",
+    "script.js",
+    "style.css"
+  ]
 }
