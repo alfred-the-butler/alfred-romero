@@ -14,5 +14,6 @@
       ]
     }
   ],
-  "cleanUrls": false
+  "cleanUrls": false,
+  "directoryListing": false
 }
