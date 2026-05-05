@@ -318,7 +318,7 @@ document.getElementById('btn-select').addEventListener('click', e => {
   }
 });
 
-const VIEW_ORDER = ['about', 'projects', 'contact'];
+const VIEW_ORDER = ['about', 'contact'];
 
 function cycleView(step) {
   const i = VIEW_ORDER.indexOf(currentView);
