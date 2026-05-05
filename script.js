@@ -246,12 +246,19 @@ const isCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse
 
 function iosHapticTick() {
   try {
+    const id = 'haptic-' + Date.now();
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.setAttribute('switch', '');
+    input.id = id;
+    input.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
     const label = document.createElement('label');
-    label.ariaHidden = 'true';
-    label.style.cssText = 'position:absolute;left:-9999px;width:0;height:0;pointer-events:none;';
-    label.htmlFor = 'haptic-switch';
+    label.htmlFor = id;
+    label.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;pointer-events:none;';
+    document.body.appendChild(input);
     document.body.appendChild(label);
     label.click();
+    document.body.removeChild(input);
     document.body.removeChild(label);
   } catch {}
 }

@@ -2,7 +2,7 @@
   "name": "alfred-portfolio",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve -l tcp://0.0.0.0:${PORT:-3000} -c serve.json ."
+    "start": "serve -l tcp://0.0.0.0:${PORT:-3000} -c serve.json --single ."
   },
   "dependencies": {
     "serve": "^14.2.4"
