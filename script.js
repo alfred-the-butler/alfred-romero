@@ -460,6 +460,10 @@ function primeAudio() {
 const PHOTOS = [
   'photos/photo-01.jpg',
   'photos/photo-02.jpg',
+  'photos/photo-03.jpg',
+  'photos/photo-04.jpg',
+  'photos/photo-05.jpg',
+  'photos/photo-06.jpg',
 ];
 
 function initPhotoStrip() {
